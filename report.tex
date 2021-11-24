@@ -14,8 +14,11 @@
 	The data consist of daily means and standard deviations of measurements of several conditions and the occurrence of NPF evens at the Hyytiälä forestry field station.There are three kinds of NPF events in the data, labeled "Ia", "Ib" and "II". Labels "Ia" and "Ib" are used for the days om which growth and formation date was determined with a good confidence level (Source Maso et al. 2005). Other NPF events are lab2led "II".
 	n  Class "Ia" means that a clear and strong NPF event happened on that day, while the label "Ib" is used for other days that fulfill the conditions for label "I")  The fourth possibility for given day is that no NPF event happened at all. The data is guaranteed not to have missing values. The data has been reported to have an equal amount of event ands nonevent days despite the nonevent days being more frequent in real life.
 	
+	For the binary classification a new categorical variable "class2" was created that had the value "event" on the days any of the events occurred ans "nonevent" otherwise. Of the variables in the given dataset, index and date were excluded as irrelevant and the variable "partlybad" was excluded as useless since all the rows had the same value for it.  
+	
 	The Methods
 		
+	Since succesfully selecting the features to be used in the modeling by hand would likely  require deep expertise in the field of NPF, the feature selection is done algorithmically as part of the cclassification process. 	
 	-describe approaches considered
 	-approach chosen
 	-apros and cons of this approach
