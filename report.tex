@@ -4,26 +4,46 @@
 	\author{Group 19 – Heli Hyvättinen}
 	\title{Introduction to Machine Learning – Term project initial report }
 	
-	The research question
+	\maketitle
+	
+	\chapter{The research question}
 	
 	The subject of study is the phenomenom of new particle formation (NPF). In new particle formation small particles start form larger particles. Our classifier models under what consdtions NPF happens. It is the used to predict first whether NPF happens and then additionally what kind of NPF happens. Also the propabilities of these events and lack of events are reported for both the binary- and 4 class classifier.  
 	     
 	
-	The Data
+	\chapter{The Data}
 	
 	The data consist of daily means and standard deviations of measurements of several conditions and the occurrence of NPF evens at the Hyytiälä forestry field station.There are three kinds of NPF events in the data, labeled "Ia", "Ib" and "II". Labels "Ia" and "Ib" are used for the days om which growth and formation date was determined with a good confidence level (Source Maso et al. 2005). Other NPF events are lab2led "II".
 	n  Class "Ia" means that a clear and strong NPF event happened on that day, while the label "Ib" is used for other days that fulfill the conditions for label "I")  The fourth possibility for given day is that no NPF event happened at all. The data is guaranteed not to have missing values. The data has been reported to have an equal amount of event ands nonevent days despite the nonevent days being more frequent in real life.
 	
+	The data consist of 458 observations of 100 variables. 
+	
 	For the binary classification a new categorical variable "class2" was created that had the value "event" on the days any of the events occurred ans "nonevent" otherwise. Of the variables in the given dataset, index and date were excluded as irrelevant and the variable "partlybad" was excluded as useless since all the rows had the same value for it.  
 	
-	The Methods
+	\chapter{The Methods}
+	
+	This chapter uses James et. al. 2021 as source.
 		
-	Since succesfully selecting the features to be used in the modeling by hand would likely  require deep expertise in the field of NPF, the feature selection is done algorithmically as part of the cclassification process. 	
+	Since succesfully selecting the features to be used in the modeling by hand would likely  require deep expertise in the field of NPF, the feature selection is done algorithmically as part of the classification process. 	
+	
+	For the purpose of finding a model with good prediction abilities, several/some models were tried. The model with the smallest cross-validation loss was chosen to be used. Since trying too many models would cause the chance of some model getting good accuracy just  by chance to rise, only a few models were chosen for this phase.  
+	
+	Linear models usually give best results if the modelled relationships really are linear, while fornon-linear relationships other models are better. Because we did not know beforehand whether the relationships between the given features and NPF are linear or not, both linear and non-linear models were included in this phase.  
+	
+	Logistic regression and linear discrimnant analysis (LDA) are common linear models used in machine learning. LDA assumes features to be normally distributed. It also assumes that the features have a common in-class covariance matrix. Logistic regression does not make these assumptions. Considering the data has 100 variables, it is not very likely that they would all share common covariance matrices. Therefore logistic regression is chosen as the linear model tried instead of LDA.
+	  
+	
+	For non-linear models, Quadratic Discriminant Analysis (QDA), naive Bayes, K-nearest neighbours (KNN) and ???? were considered. QDA assumes features to be normally distributed, but does not assume the deatures to have common in-class co-variance matrix.
+	
+	Some of the features are clearly dependent of each  other, such as amounts of UV-A and UV-B radiation and temperatures at different heigths of the same measurung mast. Therefore the assumption of independence of features in the naieve Bayes classification is obviously not ment. Because of this, Naive Bayes classification was not used. 
+	
+	For K-nearest neighbours (KNN) to provide accurate predictions, it requires the amount of observations to be much larger than the amount of features. The NPF data has 458 observations and 100 features. This suggests that there may not be enough observations in relation to the amount of features for KNN to provide accurate predictions. Because of this, KNN was not selected among the models tried.   
+	
 	-describe approaches considered
 	-approach chosen
-	-apros and cons of this approach
+	-pros and cons of this approach
 	
-	Binary Classification
+	\chapter{Binary Classification}
 	
 		Results
 	
@@ -37,11 +57,10 @@
 	
 	Predictions
 	
-	Classification accuracy Estimation
+	Classification accuracy Estimation (to be reported in answers.csv!)
 	
-	Perplexity
 	
-	Multi-label Classification
+	\chapter{Multi-label Classification}
 	
 	
 	Results
