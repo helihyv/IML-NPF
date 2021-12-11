@@ -1,84 +1,146 @@
 \documentclass[a4size, 12pt]{report}
 \begin{document}
 	
-	\author{Group 19 – Heli Hyvättinen}
-	\title{Introduction to Machine Learning – Term project initial report }
+	\author{Group 19 
+		
+		– Heli Hyvättinen}
+	
+	\title{Introduction to Machine Learning
+		
+		 – Term project initial report }
 	
 	\maketitle
 	
-	\chapter{The research question}
+	\section*{Introduction}
 	
-	The subject of study is the phenomenom of new particle formation (NPF). In new particle formation small particles start form larger particles. Our classifier models under what consdtions NPF happens. It is the used to predict first whether NPF happens and then additionally what kind of NPF happens. Also the propabilities of these events and lack of events are reported for both the binary- and 4 class classifier.  
-	     
+	The subject of study is the phenomenom of new particle formation (NPF). In new particle formation small particles start to form larger particles. The classifiers created in this work model under what conditions NPF happens. First of the classifiers is a binary classifier used to predict whether NP happens. The secondd classifier is a multi-class classifier that is used to predict not just whether, but also what kind of NPF happens. For the multi-class classifier probabilities of the classes is also reported.   %Also the propabilities of these events and lack of events are reported for both the binary- and 4 class classifier.  
+	    
+ 
+		The exact model used was selected with 10-fold cross validation.  Logistic regression and random trees were preliminarily selected as models to be included in the cross-validation. Both models were included in several versions with differing parameters. The model with the best mean cross-validation classification accuracy was selected. As some of the models used would not have provided the requested propabilities for classess I was prepared to favor a model that provides those probabilities if two or more models would be close to a equal performance. It turned out however, that the model with the best cross-validation accuracy provided the probabilities. Logistic regression with cost of 1 and $l_1$ penalty performed best for both binary and multiclass classification tasks.   
+
 	
-	\chapter{The Data}
+	\section*{The Data}
 	
-	The data consist of daily means and standard deviations of measurements of several conditions and the occurrence of NPF evens at the Hyytiälä forestry field station.There are three kinds of NPF events in the data, labeled "Ia", "Ib" and "II". Labels "Ia" and "Ib" are used for the days om which growth and formation date was determined with a good confidence level (Source Maso et al. 2005). Other NPF events are lab2led "II".
+	The data used consist of daily means and standard deviations of measurements of several conditions and the occurrence of NPF evens at the Hyytiälä forestry field station. The measurements are all from the same tall mast. There are three kinds of NPF events in the data, labeled "Ia", "Ib" and "II". Labels "Ia" and "Ib" are used for the days on which growth and formation date was determined with a good confidence level (Maso et al. 2005). Other NPF events are labeled "II".
 	n  Class "Ia" means that a clear and strong NPF event happened on that day, while the label "Ib" is used for other days that fulfill the conditions for label "I")  The fourth possibility for given day is that no NPF event happened at all. The data is guaranteed not to have missing values. The data has been reported to have an equal amount of event ands nonevent days despite the nonevent days being more frequent in real life.
 	
-	The data consist of 458 observations of 100 variables. 
+ 
 	
-	For the binary classification a new categorical variable "class2" was created that had the value "event" on the days any of the events occurred ans "nonevent" otherwise. Of the variables in the given dataset, index and date were excluded as irrelevant and the variable "partlybad" was excluded as useless since all the rows had the same value for it.  
+	\section*{Preprocessing data}
 	
-	\chapter{The Methods}
-	
-	This chapter uses James et. al. 2021 as source.
+		For the binary classification a new categorical variable "class2" was created that had the value "event" on the days any of the events occurred ans "nonevent" otherwise. Existing variable "class4", that includes also the information of the occurrence of different events was defined to be a categorical variable. 
 		
-	Since succesfully selecting the features to be used in the modeling by hand would likely  require deep expertise in the field of NPF, the feature selection is done algorithmically as part of the classification process. 	
+		Of the variables in the dataset given, index and date were excluded as irrelevant. The variable "partlybad" was excluded as useless since all the observations had the same value for it. After the removal of these variables the data had 100 features. There were 458 observations in the data. 
+		 
+		When used with Logistic Regression models the features were standardized to have a mean of zero and unit variance. For Random Forests no standardization was used.  
+
 	
-	For the purpose of finding a model with good prediction abilities, several/some models were tried. The model with the smallest cross-validation loss was chosen to be used. Since trying too many models would cause the chance of some model getting good accuracy just  by chance to rise, only a few models were chosen for this phase.  
+	\section*{Preliminary selection of models}
 	
-	Linear models usually give best results if the modelled relationships really are linear, while fornon-linear relationships other models are better. Because we did not know beforehand whether the relationships between the given features and NPF are linear or not, both linear and non-linear models were included in this phase.  
+	Linear models usually give better results if the modelled relationships really are linear, while for non-linear relationships other models tend to be better (James et al. 2021). Because it was not known beforehand whether the relationships between the given features and NPF were linear or not, one linear and one non-linear model type was included in the cross-validation phase.  
 	
-	Logistic regression and linear discrimnant analysis (LDA) are common linear models used in machine learning. LDA assumes features to be normally distributed. It also assumes that the features have a common in-class covariance matrix. Logistic regression does not make these assumptions. Considering the data has 100 variables, it is not very likely that they would all share common covariance matrices. Therefore logistic regression is chosen as the linear model tried instead of LDA.
+	Logistic regression and linear discriminant analysis (LDA) are common linear models used in machine learning  (James et. 2021). LDA assumes features to be normally distributed. It also assumes that the features have a common in-class covariance matrix. Logistic regression does not make these assumptions. Considering the data has 100 features, it is not very likely that they would all share common covariance matrices. Therefore logistic regression is chosen as the linear model tried instead of LDA. Logistic regression is based on estimating the probabilities of the classes by fitting a linear model to the data  (James et. 2021). Because of this it does provide predicted probabilities for the classes.  
+	  
+	Random forests was chosen for the non-linear model. It is known to be an effective model (SOURCE) and does not make assumptions on the features. Random forests is based on generating many decision trees and combining them for predicting. As a downside, random forests does not provide any predictions of propabilities of classes. 
+	
+	Naive Bayes classification is based on the assumption that the features are independent of each other (JAmes et al. 2021). Some of the features are clearly dependent of each  other, such as amounts of UV-A and UV-B radiation and temperatures at different heigths of the same measuring mast. Therefore the assumption of independence of features in the naieve Bayes classification is obviously not met. Because of this, Naive Bayes classification was not used. 
+	
+	For K-nearest neighbours (KNN) to provide accurate predictions, it requires the amount of observations to be much larger than the amount of features (James et al. 2021). The NPF data has 458 observations and 100 features. This suggests that there may not be enough observations in relation to the amount of features for KNN to provide accurate predictions. Because of this, KNN was not selected among the models tried.   
+
+	The exact model used was selected with 10-fold cross validation. The model with the best mean cross-validation classification accuracy was selected. As some of the models used would not have provided the requested propabilities for classess I was prepared to favor a model that provides those probabilities if two or more models would be close to a equal peerformance. It turned out however, that the model with the best cross-validation accuracy provided the probabilities.  
+		
+	%-describe approaches considered
+	%-approach chosen
+	%-pros and cons of this approach
+	
+		\section*{Tools used}
+	
+	Python was used as the programming language. Numpy and pandas libraries were used for handling data. SciKit Learn (sklearn) was used as the machine learning library. 
+	LogisticRegression from sklearn.linear\_models was used for Logist regression. make\_pipeline from sklearn.pipeline and SnadardScaler from sklearn.preprocessing were used for standardizing all features to have a mean of zero and unit variance for use with Logistic regression. RandomForestClassifier from sklearn.ensemble was used for Random Forests. The random seed was set to 555 troughout the program. 
+	
+	\section*{Feature selection}
+	
+   No prior feature selection was made. All feature selection was done algorithmically as part of the classification process. 	
+	
+	Both classifiers used (LogisticRegression and RandomForestClassifier) give the possibility to perform (a sort of) feature selection. RandomForestClassifier limits the number of features included in a single tree by default. The default limit is $\sqrt{p}$, where $p$ is the number of features. As there are 100 features, maximum of 10 features is included in each tree. Models with this limit, limit of $log_2 p$ and no limit at all were included in the cross-validation phase. 
+	
+	 LogistiRegression uses $l_2$-penalty regularisation by default. It also allows using $l_1$-penalty regularisation.
+		When $l_1$ -penalty is used many of the coefficents become zero (Feature Selection 2021).
+		
+		 This reduces the amount of features that affect the predictions. Because of this Logistic Regression models with $l_1$-penalty were included in the cross-validation. Models with the default $l_2$-penalty were also included.
+	
+		
+	%	https://scikit-learn.org/stable/modules/linear_model.html#logistic-regression
+	
+	
+	%	https://scikit-learn.org/stable/modules/feature_selection.html#l1-feature-selection
+	
+	
+	\section*{Binary Classification}
+	
+	\subsection*{Cross-validation}
+	
+	The exact model used for binary classification task was selected with 10-fold cross-validation. The given training data was split to training+validation and testing datasest. The training + validation set had 240 observations. This was divided to 10 buckets of 24 observations each. Each model tried was fit 10 times with 9 buckets as training data and 1 bucket of validation data, so that each bucket wwas used as validfation data once.  
+	
+	The models included in the 10-fold cross validation were Logistic regression and Random Forests. For Logistic regression the data was scaled by means and variances for faster convergence. Despite of this, the maximum amount of iterations had to be rised to 5000, since some models did not converge with some data even with 4000 iterations.  For Random Forests the data was used as such. 
+	
+		Random Forests models with the default maximum included features, $\sqrt{p}=10$ were included in variants with 100, 200 and 300 trees. Another maximum for included features used was $log_2 p$ and models with 100, 200 and 300 trees were trained with it. Also Random forests with no limit on the amount of features were trained with versions of 100 and 200 trees. The best performing Random Forests models had 85 \% mean cross-validation accuracy. They were the ones with a limit on amount of features and 200 trees.  
+	
+		For logistic regression 'saga' solver was used. Solver is the actual algorithm used for fitting. Saga was selected beacuse it supports both$l_1$ and $l_2$ regularisations and has two different ways of managing multiclass fitting. (I preferred to be able to use the same solver in both the binary and multiclass tasks.) Both l1 and l2 regularisation were included with varying cost parameters. The $l_1$ penalty was tried with costs of 1 (the default), 0.01, 0.5,  0.7, 0.9,1.3,  1.5,and 5. The $l_2$ penalty was tried with costs 1, 0.05,  0.1, 0.5, 0.9 and 10. 
+		Of these, the $l_1$ penalty with costs of 1 and 0,9 performed best, with mean cross validation accuracy of 87,5 \%. For the $l_2$ penalty the large and small values of cost had best results, 0.05 and 10 gave 85 \% accuracy.		
+  
+	
+\subsection*{Model accuracy and final model}
+	
+	The best performing model in the 10-fold cross validation was Logistic regression with $l_1$ regularisation and cost of 1. 
+	
+	Such model was then trained with the entire training+validation data and predictions generated for the testing data that was put aside in the beginning. The test set had 218 observations. The accuracy of this classifier on the test data was $0.8486238532110092 \approx 84,9 \%$. 
+	
+	The final binary classification model was then trained with the entire data set (including training+validation and test sets). As training with more data rarely decreses accuracy, the accuracy of this final model can be estinated to be at least 84,9 \%.  
+	
+	As a result of the $l_1$ regularisation the amount of non zero-coefficients was reduced to only 49 of 100. This is however still too much from the point of view of interpretability. 
+	
+	This model was not used in creating the predictions given in the separate answers.csv file.
+	
+	\section*{Multi-label Classification}
+	
+	
+	\subsection*{Cross-validation}
+	
+	The exact model used for the four-class classification task was selected by 10-fold cross validation. The given training data was split to training+validation and testing datasest. The training + validation set had 240 observations. This was divided to 10 buckets of 24 observations each. Each model tried was fit 10 times with 9 buckets as training data and 1 bucket as teh validation data, so that each bucket was used as validation data once. The trainig + validation / test split and division of rows to buckets was kept the same as that used in the binary classification task.
+	
+	Both logistic regression and random forest models were included in the 10-fold cross validation. Three random forest models with 100, 200 and 300 trees each were included. All used $\sqrt{p}$ maximum included features, which for this data is 10 features. 
+	
+	Logistic regression  with the saga solver, $l_1$ regularization and cost of one, which was best in the 2-class classification was included as two versions. First one used multinomial as multiclass parameter. The second one used ovr as multiclass paparameter. In multiclass all classes are fitted simultaneously. OVS refers to One-vs-Rest, and in it each class is fitted agains all others in turn. 
+	
+The model with the saga solver, $l_1$ regularization and multinomial was included also with the costs $0.5$, $0.1$ and $10$. 	In addition Logistic regression with the saga solver, $l_2$ regularization, cost of one and multinomial multiclass was included
+	
+The best accuracy ($0.6833333333333333 \approx 68,3 \%$) was again reached with logistic regression, saga solver, $l_1$ regularisation and cost of one. Multinomial performed better than ovr. 
+	
+\subsection*{Model accuracy and final model}
+
+	A model identical to the best one was then trained with the entire training+validation data and predictions generated for the testing data that was put aside in the beginning. The test set had 218 observations. The accuracy of this classifier on the test data was $0.6375000000000001 \approx 63,8 \% $ for the four-class classification task.	The binary classification accuracy (event/nonevent) was much better, $0.8532110091743119 \approx 85,3 \%$.  The binary classification accuracy of four-label classifier was on the same level and even sligthly better than the accuracy of the final binary classifier on the test data.
+	
+	The final four-class classification model was then trained with the entire data set (including training+validation and test sets). As training with more data rarely decreses accuracy, the accuracy of this final model can be estinmted to be at least 85,3 \%. Thus, it was rounded up to 0.86 when reporting the estimated binary accuracy in the separate answers.csv file.
+	
+	This final model was used to create the four-class predictions and binary-classification probabilites reported in the separate asnwers.csv file.
+	
+		As a result of the $l_1$ regularisation the amount of non zero-coefficients was reduced to only 26/100 for class II, 28/100 for the class Ia, 24/100 for the class Ib and 34/100 for the class "nonevent". 66 of 100 features had a non-zero co-efficient for at least one class. There are too much features involved in the prediction from the point of view of interpretability. 
+	
 	  
 	
-	For non-linear models, Quadratic Discriminant Analysis (QDA), naive Bayes, K-nearest neighbours (KNN) and ???? were considered. QDA assumes features to be normally distributed, but does not assume the deatures to have common in-class co-variance matrix.
+\section*{Summary}
 	
-	Some of the features are clearly dependent of each  other, such as amounts of UV-A and UV-B radiation and temperatures at different heigths of the same measurung mast. Therefore the assumption of independence of features in the naieve Bayes classification is obviously not ment. Because of this, Naive Bayes classification was not used. 
-	
-	For K-nearest neighbours (KNN) to provide accurate predictions, it requires the amount of observations to be much larger than the amount of features. The NPF data has 458 observations and 100 features. This suggests that there may not be enough observations in relation to the amount of features for KNN to provide accurate predictions. Because of this, KNN was not selected among the models tried.   
-	
-	-describe approaches considered
-	-approach chosen
-	-pros and cons of this approach
-	
-	\chapter{Binary Classification}
-	
-		Results
-	
-	Data Exploration
-	
-	Feature Selection
-	
-	Model Selection
-	
-	Model Created
-	
-	Predictions
-	
-	Classification accuracy Estimation (to be reported in answers.csv!)
-	
-	
-	\chapter{Multi-label Classification}
-	
-	
-	Results
-	
-	Data Exploration
-	
-	Feature Selection
-	
-	Model Selection
-	
-	Model Created
-	
-	Predictions
-	
-	Classification accuracy Estimation
-	
-	
-%	Self-grading report
+
 	     
+
+\section*{References}
+
+James, G., Witten, D., Hastie, T. and Tibshiran, R. 2021: An Introduction to Statistical Learning with Applications in R. Second Edition. Springer. https://web.stanford.edu/~hastie/ISLR2/ISLRv2\_website.pdf  
+
+Maso, M., Kulmala, M. Riipinen, I., Wagner, R., Hussein, T., Aalto, P.P. and Lehtinen, K.E.J. 2005: Formation and growth of fresh athmospheric aerosols: eight years of aerosol size distribution data from SMEAR II, Hyytiälä, Finland. Boreal Environment Research 10:323-336. 
+
+Feature Selection 2021. https://scikit-learn.org/stable/modules/feature\_selection.html  Cited 11.12.2021. SciKit Learn User Guide. 
+%	Self-grading report
 
 \end{document}
