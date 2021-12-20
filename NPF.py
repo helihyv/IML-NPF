@@ -263,6 +263,8 @@ print(class2_final_coef)
 print("Intercept")
 print(class2_final_intercept)
 
+
+
 #################################
 #Classification to four classes #
 ##################################
@@ -406,3 +408,7 @@ print("Intercepts")
 print(class4_final_intercept)
 
 print (np.count_nonzero(np.sum(class4_final_coef, axis=0)))
+
+class4_final_coef_asdf =pd.DataFrame(class4_final_coef)
+print(class4_final_coef_asdf.describe())
+
